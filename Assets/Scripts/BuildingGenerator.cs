@@ -73,8 +73,8 @@ public class BuildingGenerator : MonoBehaviour
 
     private bool BoundsCheck(float scaleRX, float scaleRZ, int x, int z)
     {
-        int sizeX = Mathf.CeilToInt(baseParts[buildingNo].GetComponent<MeshRenderer>().bounds.max.x);
-        int sizeZ = Mathf.CeilToInt(baseParts[buildingNo].GetComponent<MeshRenderer>().bounds.max.z);
+        int sizeX = Mathf.RoundToInt(baseParts[buildingNo].GetComponent<MeshRenderer>().bounds.max.x);
+        int sizeZ = Mathf.RoundToInt(baseParts[buildingNo].GetComponent<MeshRenderer>().bounds.max.z);
 
         int newX = Mathf.CeilToInt((x * scaleRX) - (this.transform.localScale.x / 2));
         int newZ = Mathf.CeilToInt((z * scaleRZ) - (this.transform.localScale.z / 2));
@@ -86,22 +86,22 @@ public class BuildingGenerator : MonoBehaviour
 
         // Make flags
 
-        if (texture.GetPixel(newX + sizeX, newZ + sizeZ) != Color.black)
+        if (texture.GetPixel(x + sizeX, z + sizeZ) != Color.black)
         {
             x1z1Flag = true;
         }
 
-        if (texture.GetPixel(newX + sizeX, newZ - sizeZ) != Color.black)
+        if (texture.GetPixel(x + sizeX, z - sizeZ) != Color.black)
         {
             x1z2Flag = true;
         }
 
-        if (texture.GetPixel(newX - sizeX, newZ + sizeZ) != Color.black)
+        if (texture.GetPixel(x - sizeX, z + sizeZ) != Color.black)
         {
             x2z1Flag = true;
         }
 
-        if (texture.GetPixel(newX - sizeX, newZ - sizeZ) != Color.black)
+        if (texture.GetPixel(x - sizeX, z - sizeZ) != Color.black)
         {
             x2z2Flag = true;
         }
