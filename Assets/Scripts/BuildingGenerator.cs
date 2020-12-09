@@ -17,6 +17,7 @@ public class BuildingGenerator : MonoBehaviour
     public uint imgHeight = 512;
     [SerializeField] Texture2D texture;
 
+    private bool instantiated;
     private bool positionValid;
 
     private int buildingIndex;
@@ -41,9 +42,18 @@ public class BuildingGenerator : MonoBehaviour
     void SpawnBuilding(GameObject[] buildingArray)
     {
         Transform randomTransform = buildingArray[Random.Range(0, buildingArray.Length - 1)].transform;
-        GameObject clone = Instantiate(randomTransform.gameObject, GetSpawnPostion(), Quaternion.identity) as GameObject;
+        GameObject clone = Instantiate(randomTransform.gameObject, GetSpawnPostion(), Quaternion.identity) as GameObject;      
         Mesh cloneMesh = clone.GetComponentInChildren<MeshFilter>().mesh;
         Bounds bounds = cloneMesh.bounds;
+        if (BoundsCheck(Mathf.FloorToInt(clone.transform.position.x), Mathf.FloorToInt(clone.transform.position.z)))
+        {
+            instantiated = true;
+        }
+        else
+        {
+            Destroy(clone);
+            buildingIndex--;        
+        }
     }
 
     Vector3 GetSpawnPostion()
@@ -58,7 +68,7 @@ public class BuildingGenerator : MonoBehaviour
             x = Mathf.FloorToInt(Random.Range(1, imgWidth));
             z = Mathf.FloorToInt(Random.Range(1, imgHeight));
 
-            if (texture.GetPixel(x,z) != Color.black && BoundsCheck(x, z))
+            if (texture.GetPixel(x,z) != Color.black)
             {
                 positionValid = true;
             }
@@ -70,8 +80,8 @@ public class BuildingGenerator : MonoBehaviour
 
     private bool BoundsCheck(int x, int z)
     {
-        int sizeX = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Renderer>().bounds.extents.x);
-        int sizeZ = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Renderer>().bounds.extents.z);
+        int sizeX = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Collider>().bounds.extents.x);
+        int sizeZ = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Collider>().bounds.extents.z);
 
         Vector3 x1z1 = new Vector3(x + sizeX, 0, z + sizeZ);
         Vector3 x1z2 = new Vector3(x + sizeX, 0, z - sizeZ);
