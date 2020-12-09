@@ -19,6 +19,8 @@ public class BuildingGenerator : MonoBehaviour
 
     private bool positionValid;
 
+    private int buildingIndex;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -30,7 +32,7 @@ public class BuildingGenerator : MonoBehaviour
     {
         int targetPieces = Random.Range(minPieces, maxPieces);
 
-        for (int i = minPieces - 1; i < maxPieces; i++)
+        for (buildingIndex = minPieces - 1; buildingIndex < maxPieces; buildingIndex++)
         {
             SpawnBuilding(baseParts);
         }
@@ -56,7 +58,7 @@ public class BuildingGenerator : MonoBehaviour
             x = Mathf.FloorToInt(Random.Range(1, imgWidth));
             z = Mathf.FloorToInt(Random.Range(1, imgHeight));
 
-            if (texture.GetPixel(x,z) != Color.black)
+            if (texture.GetPixel(x,z) != Color.black && BoundsCheck(x, z))
             {
                 positionValid = true;
             }
@@ -66,10 +68,48 @@ public class BuildingGenerator : MonoBehaviour
         return position;
     }
 
-    bool BoundsCheck(int x, int y)
+    private bool BoundsCheck(int x, int z)
     {
-        int sizeX;
+        int sizeX = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Renderer>().bounds.extents.x);
+        int sizeZ = Mathf.FloorToInt(baseParts[buildingIndex].GetComponent<Renderer>().bounds.extents.z);
 
-        return true;
+        Vector3 x1z1 = new Vector3(x + sizeX, 0, z + sizeZ);
+        Vector3 x1z2 = new Vector3(x + sizeX, 0, z - sizeZ);
+        Vector3 x2z1 = new Vector3(x - sizeX, 0, z + sizeZ);
+        Vector3 x2z2 = new Vector3(x - sizeX, 0, z - sizeZ);
+
+        bool x1z1Flag = false;
+        bool x1z2Flag = false;
+        bool x2z1Flag = false;
+        bool x2z2Flag = false;
+
+        // Make flags
+
+        if (texture.GetPixel(x + sizeX, z + sizeZ) != Color.black)
+        {
+            x1z1Flag = true;
+        }
+
+        if (texture.GetPixel(x + sizeX, z - sizeZ) != Color.black)
+        {
+            x1z2Flag = true;
+        }
+
+        if (texture.GetPixel(x - sizeX, z + sizeZ) != Color.black)
+        {
+            x2z1Flag = true;
+        }
+
+        if (texture.GetPixel(x - sizeX, z - sizeZ) != Color.black)
+        {
+            x2z2Flag = true;
+        }
+
+        if (x1z1Flag && x1z2Flag && x2z1Flag && x2z2Flag)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
