@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 10540f31f85e4ab469726ad25c17b1d5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - vCube: {instanceID: 0}
+  - rawImage: {instanceID: 0}
+  - texture: {fileID: 2800000, guid: 3dc17f17860278b4d97331d650338134, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
