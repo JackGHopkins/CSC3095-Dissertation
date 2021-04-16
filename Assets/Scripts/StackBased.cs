@@ -24,7 +24,7 @@ public class StackBased : MonoBehaviour
 
         foreach (Color32 currentColour in colours)
         {
-
+            currentMipPosition = 0;
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureMip.Length];
 
