@@ -264,7 +264,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d23dda7a2ac7f5246b8118f1696b8ae0, type: 2}
+  - {fileID: 2100000, guid: febfe3eeb226be34f9e0b95e5cbb321f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -301,8 +301,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858465328}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 128, y: 1, z: 128}
+  m_LocalPosition: {x: 100, y: -0.5, z: 100}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -322,18 +322,18 @@ MonoBehaviour:
   minPieces: 1
   maxPieces: 1000
   baseParts:
-  - {fileID: 174332, guid: a72279e3b12169c46bafba06303acf4b, type: 3}
   - {fileID: 169570, guid: 594d2b648448ef1458c5263b32ba1e1f, type: 3}
-  - {fileID: 118106, guid: 9a16735a8eacd8b48933ccdf6dfffe45, type: 3}
-  - {fileID: 179844, guid: c2aeb3b938cb0f540a7cc83906bea6b0, type: 3}
-  - {fileID: 193714, guid: 53a1fad510b98f74c96763872cbd652f, type: 3}
   middleParts: []
   topParts: []
   textureGridStepSizeX: 4
   textureGridStepSizeY: 4
-  imgWidth: 128
-  imgHeight: 128
-  texture: {fileID: 2800000, guid: fcf20d0709d5451499dd356984dd8fc8, type: 3}
+  imgWidth: 100
+  imgHeight: 100
+  texture: {fileID: 2800000, guid: ca45bbc64d45ba240a6c193c45fd3242, type: 3}
+  buildingSpacing: 1
+  colors:
+  - serializedVersion: 2
+    rgba: 4278190080
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,10 +410,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalRotation: {x: 0.31133994, y: 0, z: 0, w: 0.95029867}
+  m_LocalPosition: {x: 0, y: 44.19, z: -86.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 36.28, y: 0, z: 0}
