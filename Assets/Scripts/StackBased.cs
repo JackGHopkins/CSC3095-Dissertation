@@ -32,10 +32,13 @@ public class StackBased : MonoBehaviour
             {
                 // Go to next loop if pixel has been checked.
                 if (pixelCheck[pixelCount])
+                {
+                    currentMipPosition++;
                     continue;
+                }
 
                 // Start flood fill if colours are the same.
-                if (Color.black == textureMip[pixelCount])
+                if (textureMip[currentMipPosition].Equals(currentColour))
                 {
                     //perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
                     StackBased4Point(perimeter, currentColour, currentMipPosition);
@@ -57,8 +60,6 @@ public class StackBased : MonoBehaviour
         if (currentMipPosition >= textureMip.Length || currentMipPosition < 0)
             return;
 
-        if (pixelCheck[currentMipPosition])
-            return;
 
         // 1. If Node is not "Inside" then Return and add node to the list.
         if (!textureMip[currentMipPosition].Equals(colour))
@@ -72,6 +73,9 @@ public class StackBased : MonoBehaviour
             pixelCheck[currentMipPosition] = true;
             return;
         }
+
+        if (pixelCheck[currentMipPosition])
+            return;
 
         // 2. Set the node
         pixelCheck[currentMipPosition] = true;

@@ -301,7 +301,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858465328}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 100, y: -0.5, z: 100}
+  m_LocalPosition: {x: 50, y: -0.5, z: 50}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
@@ -322,7 +322,7 @@ MonoBehaviour:
   minPieces: 1
   maxPieces: 1000
   baseParts:
-  - {fileID: 169570, guid: 594d2b648448ef1458c5263b32ba1e1f, type: 3}
+  - {fileID: 187248, guid: d27315a8551b44044a8042a19932c483, type: 3}
   middleParts: []
   topParts: []
   textureGridStepSizeX: 4
@@ -411,7 +411,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.31133994, y: 0, z: 0, w: 0.95029867}
-  m_LocalPosition: {x: 0, y: 44.19, z: -86.72}
+  m_LocalPosition: {x: 87, y: 63, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
