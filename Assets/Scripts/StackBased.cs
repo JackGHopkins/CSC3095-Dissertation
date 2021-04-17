@@ -11,7 +11,7 @@ public class StackBased : MonoBehaviour
     int textureHeight;
     int currentMipPosition;
 
-    public List<Vector2> FloodFill(Texture2D texture, int textureHeight, int textureWidth, Color32[] colours)
+    public List<Vector2> FloodFill(Texture2D texture, int textureHeight, int textureWidth, Color32 colour)
     {
         List<Vector2> perimeter = new List<Vector2>();
 
@@ -22,34 +22,33 @@ public class StackBased : MonoBehaviour
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
 
-        foreach (Color32 currentColour in colours)
+
+        currentMipPosition = 0;
+        // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
+        pixelCheck = new bool[textureMip.Length];
+
+        for (int pixelCount = 0; pixelCount < textureMip.Length; pixelCount++)
         {
-            currentMipPosition = 0;
-            // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
-            pixelCheck = new bool[textureMip.Length];
-
-            for (int pixelCount = 0; pixelCount < textureMip.Length; pixelCount++)
+            // Go to next loop if pixel has been checked.
+            if (pixelCheck[pixelCount])
             {
-                // Go to next loop if pixel has been checked.
-                if (pixelCheck[pixelCount])
-                {
-                    currentMipPosition++;
-                    continue;
-                }
-
-                // Start flood fill if colours are the same.
-                if (textureMip[currentMipPosition].Equals(currentColour))
-                {
-                    //perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-                    StackBased4Point(perimeter, currentColour, currentMipPosition);
-                }
-
-                // Pixel has now been checked.
-                if (!pixelCheck[pixelCount])
-                    pixelCheck[pixelCount] = true;
-
                 currentMipPosition++;
+                continue;
             }
+
+            // Start flood fill if colours are the same.
+            if (textureMip[currentMipPosition].Equals(colour))
+            {
+                //perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
+                StackBased4Point(perimeter, colour, currentMipPosition);
+            }
+
+            // Pixel has now been checked.
+            if (!pixelCheck[pixelCount])
+                pixelCheck[pixelCount] = true;
+
+            currentMipPosition++;
+
         }
         return perimeter;
     }
