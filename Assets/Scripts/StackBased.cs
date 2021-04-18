@@ -14,7 +14,6 @@ public class StackBased : MonoBehaviour
 
     public List<Vector2> FloodFill(Texture2D texture, int textureHeight, int textureWidth, Color32 colour)
     {
-
         this.texture = texture;
         List<Vector2> perimeter = new List<Vector2>();
 
@@ -25,8 +24,6 @@ public class StackBased : MonoBehaviour
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
 
-
-        currentMipPosition = 0;
         // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
         pixelCheck = new bool[textureWidth * textureHeight];
 
@@ -65,7 +62,7 @@ public class StackBased : MonoBehaviour
 
 
         // 1. If Node is not "Inside" then Return and add node to the list.
-        if (!(this.texture.GetPixel(currentMipPosition % textureWidth, currentMipPosition / textureWidth) == colour))
+        if (this.texture.GetPixel(currentMipPosition % textureWidth, currentMipPosition / textureWidth) != colour)
         {
             // Mip's array count goes from left to right, bottom to top. Hence, we find the modulo for the X coord and divide for the Y coord.
             perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
@@ -99,9 +96,75 @@ public class StackBased : MonoBehaviour
         return;
     }
 
-
-    void Finlay()
+    // I think, if you go through each pixel that isn't black, and check its neighbouring pixels to see whether they are black. 
+    // If they are black, the pixel in question adds to the perimeter. 
+    public List<Vector2> Finlay(Texture2D texture, int textureHeight, int textureWidth, Color32 colour)
     {
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
+        this.texture = texture;
 
+        List<Vector2> perimeter = new List<Vector2>();
+
+        textureMip = texture.GetPixels32();
+
+        // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
+        pixelCheck = new bool[textureWidth * textureHeight];
+
+        for (currentMipPosition = 0; currentMipPosition < textureMip.Length; currentMipPosition++)
+        {
+            if (!colour.Equals(textureMip[currentMipPosition]))
+            {
+                // Checking if there is a North Pixel
+                if (currentMipPosition + textureWidth < textureMip.Length)
+                {
+                    // Only with examine pixel if it has not been checked before.
+                    if (colour.Equals(textureMip[currentMipPosition + textureWidth]) && !pixelCheck[currentMipPosition + textureWidth])
+                    {
+                        perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor((currentMipPosition / textureHeight) + 1)));
+                        pixelCheck[currentMipPosition + textureWidth] = true;
+                    }
+                }
+
+                // Checking if there is a South Pixel
+                if (currentMipPosition - textureWidth >= 0)
+                {
+                    //Debug.Log("South Pixel");
+                    // Only with examine pixel if it has not been checked before.
+                    if (colour.Equals(textureMip[currentMipPosition - textureWidth]) && !pixelCheck[currentMipPosition - textureWidth])
+                    {
+                        perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor((currentMipPosition / textureHeight) - 1)));
+                        pixelCheck[currentMipPosition - textureWidth] = true;
+                    }
+                }
+
+                // Checking if there is an East Pixel
+                if ((currentMipPosition + 1) % textureWidth != 0)
+                {
+                    // Only with examine pixel if it has not been checked before.
+                    if (colour.Equals(textureMip[currentMipPosition + 1]) && !pixelCheck[currentMipPosition + 1])
+                    {
+                        perimeter.Add(new Vector2((currentMipPosition + 1) % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
+                        pixelCheck[currentMipPosition + 1] = true;
+                    }
+                }
+
+                // Checking if there is a West Pixel
+                if ((currentMipPosition) % textureWidth != 0)
+                {
+                    // Only with examine pixel if it has not been checked before.
+                    if (colour.Equals(textureMip[currentMipPosition - 1]) && !pixelCheck[currentMipPosition - 1])
+                    {
+                        perimeter.Add(new Vector2((currentMipPosition - 1) % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
+                        pixelCheck[currentMipPosition - 1] = true;
+                    }
+                }
+                pixelCheck[currentMipPosition] = true;
+            }
+        }
+
+        return perimeter;
     }
+
+
 }
