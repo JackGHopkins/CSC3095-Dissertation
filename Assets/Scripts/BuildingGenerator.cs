@@ -78,9 +78,11 @@ public class BuildingGenerator : MonoBehaviour
 
         for (int i = 0; i < colours.Length; i++)
         {
-        List<Vector2> perimeter = sb.FloodFill(texture, (int)imgWidth, (int)imgHeight, colours[i]);
+        //List<Vector2> perimeter = sb.FloodFill(texture, (int)imgWidth, (int)imgHeight, colours[i]);
+        List<Vector2> perimeter = sb.Finlay(texture, (int)imgWidth, (int)imgHeight, colours[i]);
             for (int j = 0; j < perimeter.Count;)
             {
+                print(perimeter[j].x + ", " + perimeter[j].y);
                 SpawnBuilding(meshesArray[i].meshes, perimeter[j]);
 
                 j = j + buildingSpacing;

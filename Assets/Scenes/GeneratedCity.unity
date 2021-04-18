@@ -267,7 +267,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: febfe3eeb226be34f9e0b95e5cbb321f, type: 2}
+  - {fileID: 2100000, guid: d1e5f6fccc53bd948bc7a67c40177008, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -329,7 +329,7 @@ MonoBehaviour:
   textureGridStepSizeY: 4
   imgWidth: 100
   imgHeight: 100
-  texture: {fileID: 2800000, guid: c79da86026e39db47babbd8915df02d6, type: 3}
+  texture: {fileID: 2800000, guid: ca45bbc64d45ba240a6c193c45fd3242, type: 3}
   meshesArray:
   - name: Black
     meshes:
