@@ -102,6 +102,6 @@ public class StackBased : MonoBehaviour
 
     void Finlay()
     {
-
+        textureMip
     }
 }
