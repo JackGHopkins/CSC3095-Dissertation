@@ -7,12 +7,15 @@ public class StackBased : MonoBehaviour
     bool[] pixelCheck;
     Color32[] textureMip;
 
+    Texture2D texture;
     int textureWidth;
     int textureHeight;
     int currentMipPosition;
 
     public List<Vector2> FloodFill(Texture2D texture, int textureHeight, int textureWidth, Color32 colour)
     {
+
+        this.texture = texture;
         List<Vector2> perimeter = new List<Vector2>();
 
         currentMipPosition = 0;
@@ -25,9 +28,9 @@ public class StackBased : MonoBehaviour
 
         currentMipPosition = 0;
         // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
-        pixelCheck = new bool[textureMip.Length];
+        pixelCheck = new bool[textureWidth * textureHeight];
 
-        for (int pixelCount = 0; pixelCount < textureMip.Length; pixelCount++)
+        for (int pixelCount = 0; pixelCount < pixelCheck.Length; pixelCount++)
         {
             // Go to next loop if pixel has been checked.
             if (pixelCheck[pixelCount])
@@ -37,7 +40,7 @@ public class StackBased : MonoBehaviour
             }
 
             // Start flood fill if colours are the same.
-            if (textureMip[currentMipPosition].Equals(colour))
+            if (texture.GetPixel(currentMipPosition % textureWidth, currentMipPosition / textureWidth) == colour)
             {
                 //perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
                 StackBased4Point(perimeter, colour, currentMipPosition);
@@ -50,18 +53,19 @@ public class StackBased : MonoBehaviour
             currentMipPosition++;
 
         }
+        textureMip = null;
         return perimeter;
     }
 
     // Recursive function
     void StackBased4Point(List<Vector2> perimeter, Color32 colour, int currentMipPosition)
     {
-        if (currentMipPosition >= textureMip.Length || currentMipPosition < 0)
+        if (currentMipPosition >= pixelCheck.Length || currentMipPosition < 0)
             return;
 
 
         // 1. If Node is not "Inside" then Return and add node to the list.
-        if (!textureMip[currentMipPosition].Equals(colour))
+        if (!(this.texture.GetPixel(currentMipPosition % textureWidth, currentMipPosition / textureWidth) == colour))
         {
             // Mip's array count goes from left to right, bottom to top. Hence, we find the modulo for the X coord and divide for the Y coord.
             perimeter.Add(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
@@ -93,5 +97,11 @@ public class StackBased : MonoBehaviour
 
         // 7. Return
         return;
+    }
+
+
+    void Finlay()
+    {
+
     }
 }
