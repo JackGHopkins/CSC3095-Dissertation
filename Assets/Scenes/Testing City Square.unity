@@ -268,7 +268,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dc967fb41c48f1545aaeee7ca4c5cbac, type: 2}
+  - {fileID: 2100000, guid: e6f25bd50629f7e438e7eb5e8a0729b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -307,7 +307,7 @@ Transform:
   m_GameObject: {fileID: 858465328}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 50, y: -0.5, z: 50}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalScale: {x: 1000, y: 1, z: 1000}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -328,8 +328,8 @@ MonoBehaviour:
   maxPieces: 1000
   textureGridStepSizeX: 4
   textureGridStepSizeY: 4
-  imgWidth: 100
-  imgHeight: 100
+  imgWidth: 1000
+  imgHeight: 1000
   multipledImgSize: 1
   stack: 0
   fourWay: 1
@@ -337,7 +337,7 @@ MonoBehaviour:
   spanFill: 0
   walkFill: 0
   neighbourChecking: 0
-  texture: {fileID: 2800000, guid: e26e2b9e84dfb344b891fc20444ca67d, type: 3}
+  texture: {fileID: 2800000, guid: 07c4fc95c6244194ca6b187fd189d2e2, type: 3}
   meshesArray:
   - name: Black / Walls
     buildingSpacing: 1

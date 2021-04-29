@@ -63,7 +63,7 @@ namespace Assets.Scripts
         }
 
 
-        public Queue<Vector2> ScanLine(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public Queue<Vector2> ScanLine(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             int x1;
 

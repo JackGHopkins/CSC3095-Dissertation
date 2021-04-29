@@ -56,7 +56,6 @@ namespace Assets.Scripts
         public bool walkFill = false;
         public bool neighbourChecking = false;
 
-
         private bool instantiated;
         private bool positionValid;
 
@@ -71,7 +70,6 @@ namespace Assets.Scripts
         // Start is called before the first frame update
         void Awake()
         {
-            Build();
             Build();
         }
 
@@ -89,7 +87,7 @@ namespace Assets.Scripts
                 if (stack)
                 {
                     Stack<Vector2> shape = new Stack<Vector2>();
-                    shape = ff.FFStack(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
+                    shape = ff.FFStack(shape, texture, (int)imgHeight, (int)imgWidth, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
 
                     for (int j = 0; j < shape.Count;)
                     {
@@ -102,7 +100,7 @@ namespace Assets.Scripts
                 else
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
-                    shape = ff.FFQueue(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
+                    shape = ff.FFQueue(shape, texture, (int)imgHeight, (int)imgWidth, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
 
                     for (int j = 0; j < shape.Count;)
                     {

@@ -20,7 +20,8 @@ namespace Assets.Scripts
         int rounds;
 
         // This method is to find the first pixel of that colour in the shape.
-        public Stack<Vector2> FFStack(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
+        public Stack<Vector2> FFStack(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour,
+            bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
         {
             this.texture = texture;
             this.textureWidth = textureWidth;
@@ -97,7 +98,8 @@ namespace Assets.Scripts
             return shape;
         }
 
-        public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
+        public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour,
+            bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
         {
             this.texture = texture;
             this.textureWidth = textureWidth;
@@ -111,7 +113,6 @@ namespace Assets.Scripts
             Stopwatch stopWatch = new Stopwatch();
             List<long> times = new List<long>();
 
-            stopWatch.Start();
 
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
@@ -119,10 +120,14 @@ namespace Assets.Scripts
             if (neighbourChecking)
             {
                 NeighbourChecking nB = new NeighbourChecking();
-                nB.FFNeighbourChecking(shape, textureHeight, textureWidth, colour, textureMip);
-                rounds++;
+                for (int i = 0; i < 1000; i++) {
+                    stopWatch.Start();
+                    nB.FFNeighbourChecking(shape, textureHeight, textureWidth, colour, textureMip);
+                    stopWatch.Stop();
+                }
+                times.Add(stopWatch.ElapsedMilliseconds);
             }
-            else
+            else 
             {
                 for (int pixelCount = 0; pixelCount < pixelCheck.Length; pixelCount++)
                 {
@@ -145,20 +150,77 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
-                                rounds++;
+                                bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                                for (int i = 0; i < pixelTemp.Length; ++i)
+                                {
+                                    pixelTemp[i] = pixelCheck[i];
+                                }
+                                int tempMipPos = currentMipPosition;
+                                for (int i = 0; i < 1000; i++)
+                                {
+                                    for (int j = 0; j < pixelTemp.Length; ++j)
+                                    {
+                                        pixelCheck[j] = pixelTemp[j];
+                                    }
+                                    currentMipPosition = tempMipPos;
+                                    stopWatch.Start();
+                                    fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                    stopWatch.Stop();
+                                    shape.Clear();
+                                }
+                                times.Add(stopWatch.ElapsedMilliseconds);
+                                stopWatch.Reset();
                             }
                         }
                         else if (spanFill)
                         {
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
                             SpanFill sF = new SpanFill();
-                            sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
-                            rounds++;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
                         }
                         else if (walkFill)
                         {
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
                             WalkBasedFilling wF = new WalkBasedFilling();
-                            //wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
                         }
                     }
 
@@ -171,14 +233,13 @@ namespace Assets.Scripts
                 }
                 textureMip = null;
             }
-            stopWatch.Stop();
-            times.Add(stopWatch.ElapsedMilliseconds);
-            stopWatch.Reset();
 
-            print("Shape recursions: " + rounds);
+
+            print("Shape rounds: " + rounds);
+            print("Shape recursions: " + times.Count);
             print("Shape Points (Pixels): " + shape.Count());
 
-            //PrintTime(times);
+            PrintTime(times);
             return shape;
         }
 
@@ -187,7 +248,7 @@ namespace Assets.Scripts
 
             for (int i = 0; i < times.Count; i++)
             {
-                print(times[i]);
+                print("Shape " + i + " : " + times[i]);
             }
         }
     }

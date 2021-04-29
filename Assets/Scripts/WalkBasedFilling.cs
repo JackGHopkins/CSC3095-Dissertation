@@ -28,7 +28,7 @@ namespace Assets.Scripts
 
         bool backtrack, findLoop;
 
-        int? currentPixel, mark, mark2;
+        int currentPixel = 0, mark = -1, mark2 = -1;
         int count;
 
         int currentMipPosition;
@@ -43,177 +43,237 @@ namespace Assets.Scripts
         bool[] pixelFilled;
 
 
-        //public Stack<Vector2> Painter(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
-        //{
-        //    this.currentMipPosition = currentMipPosition;
-        //    this.textureWidth = textureWidth;
-        //    this.textureHeight = textureHeight;
-        //    this.colour = colour;
-        //    this.textureMip = textureMip;
+        public Stack<Vector2> Painter(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
+        {
+            this.currentMipPosition = currentMipPosition;
+            this.textureWidth = textureWidth;
+            this.textureHeight = textureHeight;
+            this.colour = colour;
+            this.textureMip = textureMip;
 
-        //    currentPixel = currentMipPosition;
-        //    currentDirection = Direction.RIGHT;
+            currentPixel = currentMipPosition;
+            currentDirection = Direction.RIGHT;
 
-        //    finished = false;
+            finished = false;
+            pixelFilled = new bool[pixelCheck.Length];
 
-        //    shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-
-        //    while (CheckFrontPixel(pixelCheck))
-        //        MoveForward(shape);
-
-        //    MainLoop(shape, pixelCheck);
-        //    while (!finished)
-        //    {
-        //        // PAINT:
-        //        MoveForward(shape);
-        //        Navigate(shape, pixelCheck);
-        //    }
-        //    return shape;
-        //}
+            while (!finished)
+            {
+                if (mainLoop)
+                    MainLoop(shape, ref pixelCheck);
+                mainLoop = true;
+                if (paint)
+                    MoveForward(shape, ref pixelCheck);
+                Navigate(shape, ref pixelCheck);
+            }
+            return shape;
+        }
 
 
-        //void MainLoop(Stack<Vector2> shape, bool[] pixelCheck)
-        //{
-        //    MoveForward(shape);
-        //    if (CheckRightPixel(pixelCheck))
-        //    {
-        //        if (backtrack && !findLoop && CheckFrontPixel(pixelCheck) && CheckLeftPixel(pixelCheck))
-        //            findLoop = true;
+        void MainLoop(Stack<Vector2> shape, ref bool[] pixelCheck)
+        {
+            MoveForward(shape, ref pixelCheck);
+            if (CheckRightPixel())
+            {
+                if (backtrack && !findLoop && (CheckFrontPixel() || CheckLeftPixel()))
+                    findLoop = true;
 
-        //        TurnRight();
-        //    }
-        //}
+                TurnRight();
+                paint = true;
+            }
+            else
+            {
+                paint = false;
+            }
+        }
 
-        //void Navigate(Stack<Vector2> shape, bool[] pixelCheck)
-        //{
-        //    CaseFinder(pixelCheck);
+        void Navigate(Stack<Vector2> shape, ref bool[] pixelCheck)
+        {
+            CaseFinder();
 
-        //    if (count != 4)
-        //    {
-        //        do
-        //        {
-        //            TurnRight();
-        //        } while (CheckFrontPixel());
-        //        do
-        //        {
-        //            TurnLeft();
-        //            finished = true;
-        //            return;
-        //        } while (!CheckFrontPixel());
-        //    }
 
-        //    switch (count)
-        //    {
-        //        case  1:
-        //            if (backtrack)
-        //                findLoop = true;
-        //            else if (findLoop)
-        //                if (mark == null)
-        //                    mark = currentMipPosition;
-        //            else if (CheckFrontLeftPixel(pixelCheck) && CheckBackLeftPixel(pixelCheck))
-        //                {
-        //                    mark = null;
-        //                    return; // go to paint;
-        //                }
-        //            break;
-        //        case 2:
-        //            if (!CheckBackPixel(pixelCheck))
-        //            {
-        //                if (CheckFrontLeftPixel(pixelCheck))
-        //                {
-        //                    mark = null;
-        //                    return; // go to paint;
-        //                }
-        //            }
-        //            else if (mark == null)
-        //            {
-        //                mark = currentMipPosition;
-        //                markDirection = currentDirection;
-        //                mark2 = null;
-        //                findLoop = false;
-        //                backtrack = false;
-        //            } 
-        //            else
-        //            {
-        //                if (mark2 == null)
-        //                {
-        //                    if (currentMipPosition == mark)
-        //                    {
-        //                        if (currentDirection == markDirection)
-        //                        {
-        //                            mark = null;
-        //                            TurnAround();
-        //                            return; // go to paint
-        //                        }
-        //                        else
-        //                        {
-        //                            backtrack = true;
-        //                            findLoop = false;
-        //                            currentDirection = markDirection;
-        //                        }
-        //                    }
-        //                    else if (findLoop)
-        //                    {
-        //                        mark2 = currentMipPosition;
-        //                        mark2Direction = currentDirection;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    if (currentMipPosition == mark)
-        //                    {
-        //                        currentMipPosition = (int)mark2;
-        //                        currentDirection = mark2Direction;
-        //                        mark = null;
-        //                        mark2 = null;
-        //                        backtrack = false;
-        //                        TurnAround();
-        //                        return; // got to paint
-        //                    }
-        //                    else if (currentMipPosition == mark2)
-        //                    {
-        //                        mark = currentMipPosition;
-        //                        currentDirection = mark2Direction;
-        //                        markDirection = mark2Direction;
-        //                        mark2 = null;
-        //                    }
-        //                }
-        //            }
-        //            break;
-        //        case 3:
-        //            mark = null;
-        //            return; // jump to paint
-        //        case 4:
-        //            shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-        //            finished = true;
-        //            break;
+            if (count != 4)
+            {
+                do
+                {
+                    TurnRight();
+                } while (CheckFrontPixel());
+                do
+                {
+                    TurnLeft();
+                } while (!CheckFrontPixel());
+            }
 
-        //    }
+            switch (count)
+            {
+                case 1:
+                    if (backtrack)
+                    {
+                        findLoop = true;
+                    }
+                    else if (findLoop)
+                    {
+                        if (mark == -1)
+                        {
+                            mark = currentMipPosition;
+                        }
+                    }
+                    else if (CheckFrontLeftPixel() && CheckBackLeftPixel())/// check this
+                    {
+                        mark = -1;
+                        mainLoop = false;
+                        paint = true;
+                        return; // go to paint;
+                    }
+                    else if (!CheckFrontLeftPixel() && !CheckFrontRightPixel() && mark == -1)
+                    {
+                        // if front left and front right pixel are filled then place  mark and set paint to false.
+                        mark = currentMipPosition;
+                        mainLoop = false;
+                        paint = false;
+                        do
+                        {
+                            MoveForward(shape, ref pixelCheck);
+                            CaseFinder();
 
-        //}
+                            if (count != 2)
+                            {
+                                TurnAround();
+                                break;
+                            }
+                        }
+                        while ((CheckFrontPixel() && count == 2));
+                    }
 
-        //void MoveForward(Stack<Vector2> shape)
-        //{
-        //    switch (currentDirection)
-        //    {
-        //        case Direction.UP:
-        //            currentMipPosition += textureWidth;
-        //            shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-        //            break;
-        //        case Direction.DOWN:
-        //            currentMipPosition -= textureWidth;
-        //            shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-        //            break;
-        //        case Direction.LEFT:
-        //            currentMipPosition -= 1;
-        //            shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-        //            break;
-        //        case Direction.RIGHT:
-        //            currentMipPosition += 1;
-        //            shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-        //            break;
-        //    }
-        //}
+                    break;
+                case 2:
+                    if (!CheckBackPixel())
+                    {
+                        if (CheckFrontLeftPixel())
+                        {
+                            mark = -1;
+                            mainLoop = false;
+                            paint = true;
+                            return; // go to paint;
+                        }
+                        else if (!CheckFrontLeftPixel() && !CheckFrontRightPixel() && mark == -1)
+                        {
+                            // if front left and front right pixel are filled then place  mark and set paint to false.
+                            mark = currentMipPosition;
+                            mainLoop = false;
+                            paint = false;
+                            do
+                            {
+                                MoveForward(shape, ref pixelCheck);
+                                CaseFinder();
+
+                                if (count != 2)
+                                {
+                                    TurnAround();
+                                    break;
+                                }
+                            }
+                            while ((CheckFrontPixel() && count == 2));
+                        }
+                    }
+                    else if (mark == -1)
+                    {
+                        mark = currentMipPosition;
+                        markDirection = currentDirection;
+                        mark2 = -1;
+                        findLoop = false;
+                        backtrack = false;
+                    }
+                    else
+                    {
+                        if (mark2 == -1)
+                        {
+                            if (currentMipPosition == mark)
+                            {
+                                if (currentDirection == markDirection)
+                                {
+                                    mark = -1;
+                                    TurnAround();
+                                    mainLoop = false;
+                                    paint = true;
+                                    return; // go to paint
+                                }
+                                else
+                                {
+                                    backtrack = true;
+                                    findLoop = false;
+                                    currentDirection = markDirection;
+                                }
+                            }
+                            else if (findLoop)
+                            {
+                                mark2 = currentMipPosition;
+                                mark2Direction = currentDirection;
+                            }
+                        }
+                        else
+                        {
+                            if (currentMipPosition == mark)
+                            {
+                                currentMipPosition = (int)mark2;
+                                currentDirection = mark2Direction;
+                                mark = -1;
+                                mark2 = -1;
+                                backtrack = false;
+                                TurnAround();
+                                mainLoop = false;
+                                paint = true;
+                                return; // got to paint
+                            }
+                            else if (currentMipPosition == mark2)
+                            {
+                                mark = currentMipPosition;
+                                currentDirection = mark2Direction;
+                                markDirection = mark2Direction;
+                                mark2 = -1;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    mark = -1;
+                    mainLoop = false;
+                    paint = true;
+                    return; // jump to paint
+                case 4:
+                    shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
+                    pixelFilled[currentMipPosition] = true;
+                    pixelCheck[currentMipPosition] = true;
+                    finished = true; // Break Main Loop
+                    break;
+            }
+        }
+
+        void MoveForward(Stack<Vector2> shape, ref bool[] pixelCheck)
+        {
+            if (paint)
+            {
+                shape.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
+                pixelFilled[currentMipPosition] = true;
+                pixelCheck[currentMipPosition] = true;
+            }
+
+            switch (currentDirection)
+            {
+                case Direction.UP:
+                    currentMipPosition += textureWidth;
+                    break;
+                case Direction.DOWN:
+                    currentMipPosition -= textureWidth;
+                    break;
+                case Direction.LEFT:
+                    currentMipPosition -= 1;
+                    break;
+                case Direction.RIGHT:
+                    currentMipPosition += 1;
+                    break;
+            }
+        }
 
         /*
          * 
@@ -221,7 +281,7 @@ namespace Assets.Scripts
          * 
          */
 
-        public Queue<Vector2> Painter(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public Queue<Vector2> Painter(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             this.currentMipPosition = currentMipPosition;
             this.textureWidth = textureWidth;
@@ -276,6 +336,7 @@ namespace Assets.Scripts
         {
             CaseFinder();
 
+
             if (count != 4)
             {
                 do
@@ -297,26 +358,37 @@ namespace Assets.Scripts
                     }
                     else if (findLoop)
                     {
-                        if (mark == null)
+                        if (mark == -1)
                         {
                             mark = currentMipPosition;
                         }
                     }
                     else if (CheckFrontLeftPixel() && CheckBackLeftPixel())/// check this
                     {
-                        mark = null;
+                        mark = -1;
                         mainLoop = false;
                         paint = true;
                         return; // go to paint;
                     }
-                    //else if (!CheckFrontLeftPixel() && !CheckFrontRightPixel() && mark == null)
-                    //{
-                    //    // if front left and front right pixel are filled then place  mark and set paint to false.
-                    //    mark = currentMipPosition;
-                    //    mainLoop = false;
-                    //    paint = false;
-                    //    while((CheckBackPixel() && count == 2) || (Check)
-                    //}
+                    else if (!CheckFrontLeftPixel() && !CheckFrontRightPixel() && mark == -1)
+                    {
+                        // if front left and front right pixel are filled then place  mark and set paint to false.
+                        mark = currentMipPosition;
+                        mainLoop = false;
+                        paint = false;
+                        do
+                        {
+                            MoveForward(shape, ref pixelCheck);
+                            CaseFinder();
+
+                            if (count != 2)
+                            {
+                                TurnAround();
+                                break;
+                            }
+                        }
+                        while ((CheckFrontPixel() && count == 2));
+                    }
 
                     break;
                 case 2:
@@ -324,29 +396,48 @@ namespace Assets.Scripts
                     {
                         if (CheckFrontLeftPixel())
                         {
-                            mark = null;
+                            mark = -1;
                             mainLoop = false;
                             paint = true;
                             return; // go to paint;
                         }
+                        else if (!CheckFrontLeftPixel() && !CheckFrontRightPixel() && mark == -1)
+                        {
+                            // if front left and front right pixel are filled then place  mark and set paint to false.
+                            mark = currentMipPosition;
+                            mainLoop = false;
+                            paint = false;
+                            do
+                            {
+                                MoveForward(shape, ref pixelCheck);
+                                CaseFinder();
+
+                                if (count != 2)
+                                {
+                                    TurnAround();
+                                    break;
+                                }
+                            }
+                            while ((CheckFrontPixel() && count == 2));
+                        }
                     }
-                    else if (mark == null)
+                    else if (mark == -1)
                     {
                         mark = currentMipPosition;
                         markDirection = currentDirection;
-                        mark2 = null;
+                        mark2 = -1;
                         findLoop = false;
                         backtrack = false;
                     }
                     else
                     {
-                        if (mark2 == null)
+                        if (mark2 == -1)
                         {
                             if (currentMipPosition == mark)
                             {
                                 if (currentDirection == markDirection)
                                 {
-                                    mark = null;
+                                    mark = -1;
                                     TurnAround();
                                     mainLoop = false;
                                     paint = true;
@@ -371,8 +462,8 @@ namespace Assets.Scripts
                             {
                                 currentMipPosition = (int)mark2;
                                 currentDirection = mark2Direction;
-                                mark = null;
-                                mark2 = null;
+                                mark = -1;
+                                mark2 = -1;
                                 backtrack = false;
                                 TurnAround();
                                 mainLoop = false;
@@ -384,13 +475,13 @@ namespace Assets.Scripts
                                 mark = currentMipPosition;
                                 currentDirection = mark2Direction;
                                 markDirection = mark2Direction;
-                                mark2 = null;
+                                mark2 = -1;
                             }
                         }
                     }
                     break;
                 case 3:
-                    mark = null;
+                    mark = -1;
                     mainLoop = false;
                     paint = true;
                     return; // jump to paint
