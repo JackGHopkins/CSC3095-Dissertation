@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-
+using System.Diagnostics;
+using System.IO;
 
 namespace Assets.Scripts
 {
@@ -52,6 +53,8 @@ namespace Assets.Scripts
         public bool fourWay = false;
         public bool recursion = false;
         public bool spanFill = false;
+        public bool walkFill = false;
+        public bool neighbourChecking = false;
 
 
         private bool instantiated;
@@ -86,12 +89,12 @@ namespace Assets.Scripts
                 if (stack)
                 {
                     Stack<Vector2> shape = new Stack<Vector2>();
-                    shape = ff.FFStack(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill);
+                    shape = ff.FFStack(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        sortShape(shape);
-                        SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
+                        //sortShape(shape);
+                        //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
 
                         j = j + meshesArray[i].buildingSpacing;
                     }
@@ -99,12 +102,12 @@ namespace Assets.Scripts
                 else
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
-                    shape = ff.FFQueue(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill);
+                    shape = ff.FFQueue(shape, texture, (int)imgWidth, (int)imgHeight, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        sortShape(shape);
-                        SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
+                        //sortShape(shape);
+                        //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
 
                         j = j + meshesArray[i].buildingSpacing;
                     }
@@ -118,7 +121,7 @@ namespace Assets.Scripts
             Transform randomTransform = buildingArray[buildingNo].transform;
             GameObject clone = Instantiate(randomTransform.gameObject, new Vector3((position.x + 0.5f) * multipledImgSize, 0, (position.y + 0.5f) * multipledImgSize), Quaternion.identity) as GameObject;
             Mesh cloneMesh = clone.GetComponentInChildren<MeshFilter>().mesh;
-            Bounds bounds = cloneMesh.bounds;
+            Bounds bouasdfasnds = cloneMesh.bounds;
         }
 
         // Turns Stack / Queue into an Array
@@ -187,6 +190,24 @@ namespace Assets.Scripts
                     continue;
                 }
             }
+        }
+
+        static void PrintText(string text)
+        {
+            string filegen, filetxt;
+            ProcessStartInfo psi;
+            Process proc;
+
+            filegen = Path.GetTempFileName();
+            filetxt = filegen + ".txt";
+            File.Move(filegen, filetxt);
+            File.AppendAllText(filetxt, text);
+
+            psi = new ProcessStartInfo(filetxt);
+            psi.Verb = "PRINT";
+            proc = Process.Start(psi);
+            proc.WaitForExit();
+            File.Delete(filetxt);
         }
     }
 }

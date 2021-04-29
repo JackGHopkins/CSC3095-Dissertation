@@ -268,7 +268,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d1e5f6fccc53bd948bc7a67c40177008, type: 2}
+  - {fileID: 2100000, guid: e6f25bd50629f7e438e7eb5e8a0729b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -306,8 +306,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858465328}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 100, y: -0.5, z: 100}
-  m_LocalScale: {x: 200, y: 1, z: 200}
+  m_LocalPosition: {x: 50, y: -0.5, z: 50}
+  m_LocalScale: {x: 1000, y: 1, z: 700}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -328,46 +328,25 @@ MonoBehaviour:
   maxPieces: 1000
   textureGridStepSizeX: 4
   textureGridStepSizeY: 4
-  imgWidth: 100
-  imgHeight: 100
-  multipledImgSize: 2
+  imgWidth: 1000
+  imgHeight: 700
+  multipledImgSize: 1
   stack: 0
   fourWay: 0
   recursion: 0
   spanFill: 1
-  texture: {fileID: 2800000, guid: ca45bbc64d45ba240a6c193c45fd3242, type: 3}
+  walkFill: 0
+  neighbourChecking: 0
+  texture: {fileID: 2800000, guid: 07c4fc95c6244194ca6b187fd189d2e2, type: 3}
   meshesArray:
   - name: Black / Walls
     buildingSpacing: 1
     perimeter: 0
     meshes:
-    - {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
-  - name: Red / Roads
-    buildingSpacing: 1
-    perimeter: 0
-    meshes:
-    - {fileID: 161712, guid: cd63e7ed2d501564ebcb6cd6729e699e, type: 3}
-  - name: Blue / High Houses
-    buildingSpacing: 1
-    perimeter: 0
-    meshes:
-    - {fileID: 104368, guid: d80243e68c7887049a8d1d3b42286f3e, type: 3}
-  - name: Green / Entertainment
-    buildingSpacing: 1
-    perimeter: 0
-    meshes:
-    - {fileID: 128636, guid: 68a8f186e1f1db64dbfe8ddd247816ec, type: 3}
-    - {fileID: 193672, guid: d8e888ed02072774198f7f7ce47d5f50, type: 3}
-    - {fileID: 162728, guid: 33adbca995ce9484f9258d275aabac10, type: 3}
+    - {fileID: 169604, guid: 507f5dc602b42c549a32a51aa9236bb1, type: 3}
   colours:
   - serializedVersion: 2
     rgba: 4278190080
-  - serializedVersion: 2
-    rgba: 4278190335
-  - serializedVersion: 2
-    rgba: 4294901760
-  - serializedVersion: 2
-    rgba: 4278255360
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,20 +24,14 @@ namespace Assets.Scripts
         /*
          *  STACK BASED
          */
-        public Stack<Vector2> FFNeighbourChecking(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, bool perimeter)
+        public Stack<Vector2> FFNeighbourChecking(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip)
         {
-            this.textureWidth = textureWidth;
-            this.textureHeight = textureHeight;
-            this.texture = texture;
-
-            textureMip = texture.GetPixels32();
-
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
 
             for (currentMipPosition = 0; currentMipPosition < textureMip.Length; currentMipPosition++)
             {
-                if ((!colour.Equals(textureMip[currentMipPosition]) || !perimeter))
+                if ((!colour.Equals(textureMip[currentMipPosition])))
                 {
                     // Checking if there is a North Pixel
                     if (currentMipPosition + textureWidth < textureMip.Length)
@@ -92,20 +86,14 @@ namespace Assets.Scripts
         /*
          *  QUEUE BASED
          */
-        public Queue<Vector2> FFNeighbourChecking(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, bool perimeter)
+        public Queue<Vector2> FFNeighbourChecking(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip)
         {
-            this.textureWidth = textureWidth;
-            this.textureHeight = textureHeight;
-            this.texture = texture;
-
-            textureMip = texture.GetPixels32();
-
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
 
             for (currentMipPosition = 0; currentMipPosition < textureMip.Length; currentMipPosition++)
             {
-                if ((!colour.Equals(textureMip[currentMipPosition]) || !perimeter))
+                if ((!colour.Equals(textureMip[currentMipPosition])))
                 {
                     // Checking if there is a North Pixel
                     if (currentMipPosition + textureWidth < textureMip.Length)

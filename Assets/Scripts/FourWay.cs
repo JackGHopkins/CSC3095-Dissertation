@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class FourWay : MonoBehaviour
+    public class FourWay
     {
         /*
          *  STACK BASED FOUR WAY RECURSION
          */
-        public void FourPointRecursion(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public void FourWayRecursion(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
         {
             if (currentMipPosition <= pixelCheck.Length && currentMipPosition > 0)
             {
@@ -31,16 +31,16 @@ namespace Assets.Scripts
                 pixelCheck[currentMipPosition] = true;
 
                 // 3. Perform Flood-fill one step to the south of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - textureWidth, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - textureWidth, ref pixelCheck);
 
                 // 4. Perform Flood-fill one step to the north of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + textureWidth, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + textureWidth, ref pixelCheck);
 
                 // 5. Perform Flood-fill one step to the west of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + 1, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + 1, ref pixelCheck);
 
                 // 6. Perform Flood-fill one step to the east of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - 1, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - 1, ref pixelCheck);
 
                 // 7. Return
                 return;
@@ -50,7 +50,7 @@ namespace Assets.Scripts
         /*
          *  QUEUE BASED RECURSION
          */
-        public void FourPointRecursion(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public void FourWayRecursion(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
         {
             if (currentMipPosition <= pixelCheck.Length && currentMipPosition > 0)
             {
@@ -72,16 +72,16 @@ namespace Assets.Scripts
                 pixelCheck[currentMipPosition] = true;
 
                 // 3. Perform Flood-fill one step to the south of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - textureWidth, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - textureWidth, ref pixelCheck);
 
                 // 4. Perform Flood-fill one step to the north of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + textureWidth, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + textureWidth, ref pixelCheck);
 
                 // 5. Perform Flood-fill one step to the west of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + 1, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition + 1, ref pixelCheck);
 
                 // 6. Perform Flood-fill one step to the east of the node
-                FourPointRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - 1, ref pixelCheck);
+                FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition - 1, ref pixelCheck);
 
                 // 7. Return
                 return;
@@ -91,7 +91,7 @@ namespace Assets.Scripts
         /*
          *  STACK FOUR WAY
          */
-        public void FF4Way(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public void FourWayLinear(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
         {
             Stack<Vector2> temp = new Stack<Vector2>();
             temp.Push(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
@@ -124,7 +124,7 @@ namespace Assets.Scripts
         /*
          *  QUEUE FOUR WAY
          */
-        public void FF4Way(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public void FourWayLinear(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
         {
             Queue<Vector2> temp = new Queue<Vector2>();
             temp.Enqueue(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
