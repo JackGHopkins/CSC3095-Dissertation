@@ -12,21 +12,12 @@ namespace Assets.Scripts
     {
         bool[] pixelCheck;
         Color32[] textureMip;
-
-        Texture2D texture;
-        int textureWidth;
-        int textureHeight;
         int currentMipPosition;
         int rounds;
 
         // This method is to find the first pixel of that colour in the shape.
-        public Stack<Vector2> FFStack(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour,
-            bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
-        {
-            this.texture = texture;
-            this.textureWidth = textureWidth;
-            this.textureHeight = textureHeight;
-
+        public Stack<Vector2> FFStack(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, FloodFillAlgorithm algorithm)
+        { 
             textureMip = texture.GetPixels32();
             currentMipPosition = 0;
 
@@ -38,10 +29,10 @@ namespace Assets.Scripts
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
 
-            if (neighbourChecking)
+            if (algorithm == FloodFillAlgorithm.PERIMETER_FILL)
             {
-                NeighbourChecking nB = new NeighbourChecking();
-                nB.FFNeighbourChecking(shape, textureHeight, textureWidth, colour, textureMip);
+                PerimeterFill pF = new PerimeterFill();
+                pF.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
             }
             else
             {
@@ -57,27 +48,28 @@ namespace Assets.Scripts
                     // Start flood fill if colours are the same.
                     if (textureMip[currentMipPosition].Equals(colour))
                     {
-                        if (fourWay)
+                        
+                        if (algorithm == FloodFillAlgorithm.FOUR_WAY_RECURSION)
                         {
                             FourWay fW = new FourWay();
-                            if (recursion)
-                            {
-                                fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
-                            }
-                            else
-                            {
-                                fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
-                            }
+                            fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         }
-                        else if (spanFill)
+                        
+                        else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
+                        {
+                            FourWay fW = new FourWay();
+                            fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                        }
+                  
+                        else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
                         {
                             SpanFill sF = new SpanFill();
-                            sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
+                            sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         } 
-                        else if (walkFill)
+                        else if (algorithm == FloodFillAlgorithm.WALK_BASED_FILL)
                         {
-                            WalkBasedFilling wF = new WalkBasedFilling();
-                            //wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
+                            WalkBasedFill wF = new WalkBasedFill();
+                            //wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         }
                     }
 
@@ -98,13 +90,8 @@ namespace Assets.Scripts
             return shape;
         }
 
-        public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour,
-            bool recursion, bool fourWay, bool spanFill, bool neighbourChecking, bool walkFill)
+        public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, FloodFillAlgorithm algorithm)
         {
-            this.texture = texture;
-            this.textureWidth = textureWidth;
-            this.textureHeight = textureHeight;
-
             textureMip = texture.GetPixels32();
             currentMipPosition = 0;
             rounds = 0;
@@ -117,12 +104,12 @@ namespace Assets.Scripts
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
 
-            if (neighbourChecking)
+            if (algorithm == FloodFillAlgorithm.PERIMETER_FILL)
             {
-                NeighbourChecking nB = new NeighbourChecking();
+                PerimeterFill nB = new PerimeterFill();
                 for (int i = 0; i < 1000; i++) {
                     stopWatch.Start();
-                    nB.FFNeighbourChecking(shape, textureHeight, textureWidth, colour, textureMip);
+                    nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
                     stopWatch.Stop();
                 }
                 times.Add(stopWatch.ElapsedMilliseconds);
@@ -141,40 +128,40 @@ namespace Assets.Scripts
                     // Start flood fill if colours are the same.
                     if (textureMip[currentMipPosition].Equals(colour))
                     {
-                        if (fourWay)
+                        if (algorithm == FloodFillAlgorithm.FOUR_WAY_RECURSION)
                         {
                             FourWay fW = new FourWay();
-                            if (recursion)
-                            {
-                                fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, ref pixelCheck);
-                            }
-                            else
-                            {
-                                bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                                for (int i = 0; i < pixelTemp.Length; ++i)
-                                {
-                                    pixelTemp[i] = pixelCheck[i];
-                                }
-                                int tempMipPos = currentMipPosition;
-                                for (int i = 0; i < 1000; i++)
-                                {
-                                    for (int j = 0; j < pixelTemp.Length; ++j)
-                                    {
-                                        pixelCheck[j] = pixelTemp[j];
-                                    }
-                                    currentMipPosition = tempMipPos;
-                                    stopWatch.Start();
-                                    fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                                    stopWatch.Stop();
-                                    shape.Clear();
-                                }
-                                times.Add(stopWatch.ElapsedMilliseconds);
-                                stopWatch.Reset();
-                            }
+
+                            fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         }
-                        else if (spanFill)
+
+                        else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
                         {
+                            FourWay fW = new FourWay();
                             bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
+                        }
+                        else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
+                        {
+                             bool[] pixelTemp = new bool[textureHeight * textureWidth];
                             
                             for (int i = 0; i < pixelTemp.Length; ++i)
                             {
@@ -197,7 +184,7 @@ namespace Assets.Scripts
                             times.Add(stopWatch.ElapsedMilliseconds);
                             stopWatch.Reset();
                         }
-                        else if (walkFill)
+                        else if (algorithm == FloodFillAlgorithm.WALK_BASED_FILL)
                         {
                             bool[] pixelTemp = new bool[textureHeight * textureWidth];
 
@@ -206,7 +193,7 @@ namespace Assets.Scripts
                                 pixelTemp[i] = pixelCheck[i];
                             }
                             int tempMipPos = currentMipPosition;
-                            WalkBasedFilling wF = new WalkBasedFilling();
+                            WalkBasedFill wF = new WalkBasedFill();
                             for (int i = 0; i < 1000; i++)
                             {
                                 for (int j = 0; j < pixelTemp.Length; ++j)

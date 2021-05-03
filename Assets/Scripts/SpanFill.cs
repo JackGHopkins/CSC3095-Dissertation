@@ -9,7 +9,7 @@ namespace Assets.Scripts
 {
     class SpanFill
     {
-        public Stack<Vector2> ScanLine(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, ref bool[] pixelCheck)
+        public void ScanLine(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             bool spanAbove = false;
             bool spanBelow = false;
@@ -59,11 +59,10 @@ namespace Assets.Scripts
                     x1++;
                 }
             }
-            return shape;
+            return;
         }
 
-
-        public Queue<Vector2> ScanLine(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
+        public void ScanLine(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             int x1;
 
@@ -114,7 +113,7 @@ namespace Assets.Scripts
                     x1++;
                 }
             }
-            return shape;
+            return;
         }
     }
 }

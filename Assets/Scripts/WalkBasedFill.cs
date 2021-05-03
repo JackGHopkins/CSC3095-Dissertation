@@ -7,22 +7,11 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class Pixel
-    {
-        public int x { get; set; }
-        public int y { get; set; }
-        public Pixel(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
     enum Direction
     {
         UP, DOWN, LEFT, RIGHT,
     }
-    class WalkBasedFilling
+    class WalkBasedFill
     {
         Direction currentDirection, markDirection, mark2Direction;
 
@@ -43,7 +32,7 @@ namespace Assets.Scripts
         bool[] pixelFilled;
 
 
-        public Stack<Vector2> Painter(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
+        public void Painter(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             this.currentMipPosition = currentMipPosition;
             this.textureWidth = textureWidth;
@@ -66,9 +55,8 @@ namespace Assets.Scripts
                     MoveForward(shape, ref pixelCheck);
                 Navigate(shape, ref pixelCheck);
             }
-            return shape;
+            return;
         }
-
 
         void MainLoop(Stack<Vector2> shape, ref bool[] pixelCheck)
         {
@@ -281,7 +269,7 @@ namespace Assets.Scripts
          * 
          */
 
-        public Queue<Vector2> Painter(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
+        public void Painter(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             this.currentMipPosition = currentMipPosition;
             this.textureWidth = textureWidth;
@@ -295,13 +283,6 @@ namespace Assets.Scripts
             finished = false;
             pixelFilled = new bool[pixelCheck.Length];
 
-            //shape.Enqueue(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));
-            //pixelFilled[currentMipPosition] = true;
-            //pixelCheck[currentMipPosition] = true;
-
-            //while (CheckFrontPixel())
-            //    MoveForward(shape, ref pixelCheck);
-
             while (!finished)
             {
                 if (mainLoop)
@@ -311,9 +292,8 @@ namespace Assets.Scripts
                     MoveForward(shape, ref pixelCheck);
                 Navigate(shape, ref pixelCheck);
             }
-            return shape;
+            return;
         }
-
 
         void MainLoop(Queue<Vector2> shape, ref bool[] pixelCheck)
         {
@@ -525,8 +505,6 @@ namespace Assets.Scripts
          *      TURNING CURRENT DIRECTION
          * 
          */
-
-
         void TurnRight()
         {
             switch (currentDirection)
@@ -586,11 +564,10 @@ namespace Assets.Scripts
 
         /*
          *  
-         *      CHECKING PIXELS
+         *      CHECKING PIXELS (Directions are relative to currentDirection)
          *  
          */
 
-        // Checking if the pixel in Front is empty and inside the shape.
         bool CheckFrontPixel()
         {
             if (currentDirection == Direction.UP && currentMipPosition < textureMip.Length - textureWidth)
@@ -621,7 +598,6 @@ namespace Assets.Scripts
 
         }
 
-        // Check if pixel behind is inside the shape.
         bool CheckBackPixel()
         {
             if (currentDirection == Direction.DOWN && currentMipPosition < textureMip.Length - textureWidth)
@@ -652,7 +628,6 @@ namespace Assets.Scripts
 
         }
 
-        // Checking Right Pixel is inside the shape.
         bool CheckRightPixel()
         {
             if (currentDirection == Direction.LEFT && currentMipPosition < textureMip.Length - textureWidth)
@@ -682,7 +657,6 @@ namespace Assets.Scripts
             return false;
         }
 
-        // Checking Left Pixel is inside the shape.
         bool CheckLeftPixel()
         {
             if (currentDirection == Direction.RIGHT && currentMipPosition < textureMip.Length - textureWidth)
@@ -712,7 +686,6 @@ namespace Assets.Scripts
             return false;
         }
 
-        // Check if pixel Front-Left is inside the shape.
         bool CheckFrontLeftPixel()
         {
             if (currentDirection == Direction.UP && currentMipPosition < textureMip.Length - textureWidth)
@@ -771,7 +744,6 @@ namespace Assets.Scripts
             return false;
         }
 
-        // Check if pixel back-left is inside the shape.
         bool CheckBackLeftPixel()
         {
             if (currentDirection == Direction.DOWN && currentMipPosition < textureMip.Length - textureWidth)

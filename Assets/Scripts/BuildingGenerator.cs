@@ -7,107 +7,83 @@ using System.IO;
 
 namespace Assets.Scripts
 {
-    struct Coordinate
-    {
-        int x;
-        int y;
-        // To distinguish if road is on left or right of the pixel.
-        int shapeNo;
-        bool leftOfRoad;
-
-        public Coordinate(int x, int y, int shapeNo, bool leftOfRoad)
-        {
-            this.x = x;
-            this.y = y;
-            this.shapeNo = shapeNo;
-            this.leftOfRoad = leftOfRoad;
-        }
-    }
-
     [System.Serializable]
-    public class WaypointPath
+    public class Building
     {
         public string name;
         public int buildingSpacing;
-        public bool perimeter;
         public GameObject[] meshes;
     }
 
-    public class MyWaypointScript : MonoBehaviour
+    public class MeshArray : MonoBehaviour
     {
-        public WaypointPath[] paths;
+        public Building[] meshArray;
+    }
+
+    public enum FloodFillAlgorithm
+    {
+        FOUR_WAY_RECURSION = 0,
+        FOUR_WAY_LINEAR = 1,
+        SPAN_FILL = 2,
+        WALK_BASED_FILL = 3,
+        PERIMETER_FILL = 4,
+    }
+
+    public enum DataStructure
+    {
+        STACK = 0,
+        QUEUE = 1,
     }
 
     public class BuildingGenerator : MonoBehaviour
     {
-        public int minPieces = 1;
-        public int maxPieces = 5;
-
-        public uint textureGridStepSizeX = 4;
-        public uint textureGridStepSizeY = 4;
-        public uint imgWidth = 512;
-        public uint imgHeight = 512;
         public float multipledImgSize = 1.0f;
 
-        public bool stack = false;
-        public bool fourWay = false;
-        public bool recursion = false;
-        public bool spanFill = false;
-        public bool walkFill = false;
-        public bool neighbourChecking = false;
-
-        private bool instantiated;
-        private bool positionValid;
-
-        private int buildingIndex;
+        public FloodFillAlgorithm algorithm = FloodFillAlgorithm.FOUR_WAY_LINEAR;
+        public DataStructure dataStruct = DataStructure.STACK;
         private int buildingNo;
 
         [SerializeField] Texture2D texture;
-        [SerializeField] WaypointPath[] meshesArray;
+        [SerializeField] Building[] meshArray;
         [SerializeField] Color32[] colours;
-
 
         // Start is called before the first frame update
         void Awake()
         {
-            Build();
+            transform.localScale += new Vector3(texture.width, -0.5f, texture.height);
+            Main();
         }
 
-        void Build()
-        {
-            SpawnBuildingFloodFill();
-        }
-
-        void SpawnBuildingFloodFill()
+        void Main()
         {
             FloodFill ff = gameObject.AddComponent<FloodFill>();
 
             for (int i = 0; i < colours.Length; i++)
             {
-                if (stack)
+                if (dataStruct == DataStructure.STACK)
                 {
                     Stack<Vector2> shape = new Stack<Vector2>();
-                    shape = ff.FFStack(shape, texture, (int)imgHeight, (int)imgWidth, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
+                    shape = ff.FFStack(shape, texture, texture.height, texture.width, colours[i], algorithm);
+                    //sortShape(shape);
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        //sortShape(shape);
                         //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
 
-                        j = j + meshesArray[i].buildingSpacing;
+                        j = j + meshArray[i].buildingSpacing;
                     }
                 }
-                else
+                else if (dataStruct == DataStructure.QUEUE)
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
-                    shape = ff.FFQueue(shape, texture, (int)imgHeight, (int)imgWidth, colours[i], recursion, fourWay, spanFill, neighbourChecking, walkFill);
+                    shape = ff.FFQueue(shape, texture, texture.height, texture.width, colours[i], algorithm);
+                    //sortShape(shape);
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        //sortShape(shape);
                         //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
 
-                        j = j + meshesArray[i].buildingSpacing;
+                        j = j + meshArray[i].buildingSpacing;
                     }
                 }
             }
@@ -133,6 +109,7 @@ namespace Assets.Scripts
             sortShape(shape.ToArray());
         }
 
+        // Sorts Shapes to be ordered counter clockwise.
         void sortShape(Vector2[] shape)
         {
             for (int i = 0; i < shape.Length - 1; i++)
@@ -188,24 +165,6 @@ namespace Assets.Scripts
                     continue;
                 }
             }
-        }
-
-        static void PrintText(string text)
-        {
-            string filegen, filetxt;
-            ProcessStartInfo psi;
-            Process proc;
-
-            filegen = Path.GetTempFileName();
-            filetxt = filegen + ".txt";
-            File.Move(filegen, filetxt);
-            File.AppendAllText(filetxt, text);
-
-            psi = new ProcessStartInfo(filetxt);
-            psi.Verb = "PRINT";
-            proc = Process.Start(psi);
-            proc.WaitForExit();
-            File.Delete(filetxt);
         }
     }
 }
