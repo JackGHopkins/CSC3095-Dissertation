@@ -81,7 +81,7 @@ namespace Assets.Scripts
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
+                        //SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
                         j = j + meshArray[i].buildingSpacing;
                     }

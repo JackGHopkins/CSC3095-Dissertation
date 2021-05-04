@@ -11,8 +11,11 @@ namespace Assets.Scripts
          */
         public void FourWayRecursion(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
-            if (currentMipPosition <= pixelCheck.Length && currentMipPosition > 0)
+            if (currentMipPosition < pixelCheck.Length && currentMipPosition >= 0 && textureMip[currentMipPosition].Equals(colour))
             {
+                if (pixelCheck[currentMipPosition])
+                    return;
+
                 // 1. If Node is "Inside" and not yet checked then Return add node to the list and mark as Checkd
                 if (textureMip[currentMipPosition].Equals(colour) && !pixelCheck[currentMipPosition])
                 {
@@ -21,11 +24,8 @@ namespace Assets.Scripts
 
                     // Set pixel to Checked.
                     pixelCheck[currentMipPosition] = true;
-                    return;
                 }
 
-                if (pixelCheck[currentMipPosition])
-                    return;
 
                 // 2. Set the node
                 pixelCheck[currentMipPosition] = true;
@@ -45,6 +45,7 @@ namespace Assets.Scripts
                 // 7. Return
                 return;
             }
+            pixelCheck[currentMipPosition] = true;
         }
 
         /*
@@ -52,8 +53,11 @@ namespace Assets.Scripts
          */
         public void FourWayRecursion(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
-            if (currentMipPosition <= pixelCheck.Length && currentMipPosition > 0)
+            if (currentMipPosition < pixelCheck.Length && currentMipPosition >= 0 && textureMip[currentMipPosition].Equals(colour))
             {
+                if (pixelCheck[currentMipPosition])
+                    return;
+
                 // 1. If Node is "Inside" and not yet checked then Return add node to the list and mark as Checkd
                 if (textureMip[currentMipPosition].Equals(colour) && !pixelCheck[currentMipPosition])
                 {
@@ -62,11 +66,8 @@ namespace Assets.Scripts
 
                     // Set pixel to Checked.
                     pixelCheck[currentMipPosition] = true;
-                    return;
                 }
 
-                if (pixelCheck[currentMipPosition])
-                    return;
 
                 // 2. Set the node
                 pixelCheck[currentMipPosition] = true;
@@ -86,6 +87,7 @@ namespace Assets.Scripts
                 // 7. Return
                 return;
             }
+            pixelCheck[currentMipPosition] = true;
         }
 
         /*
@@ -103,11 +105,9 @@ namespace Assets.Scripts
                 if (a.x < textureWidth && a.x > 0 &&
                     a.y < textureHeight && a.y > 0)
                 {
-                    if (textureMip[currentMipPosition].Equals(colour))
+                    if (textureMip[currentMipPosition].Equals(colour) && !pixelCheck[currentMipPosition])
                     {
-                        // Add Vector2 to main Stack.
-                        if (!pixelCheck[currentMipPosition])
-                            shape.Push(new Vector2(a.x - 1, a.y));
+                        shape.Push(new Vector2(a.x - 1, a.y));
 
                         temp.Push(new Vector2(a.x - 1, a.y));
                         temp.Push(new Vector2(a.x + 1, a.y));
@@ -121,10 +121,10 @@ namespace Assets.Scripts
             return;
         }
 
-        /*
-         *  QUEUE FOUR WAY
-         */
-        public void FourWayLinear(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
+/*
+ *  QUEUE FOUR WAY
+ */
+public void FourWayLinear(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
             Queue<Vector2> temp = new Queue<Vector2>();
             temp.Enqueue(new Vector2(currentMipPosition % textureWidth, Mathf.Floor(currentMipPosition / textureHeight)));

@@ -17,22 +17,29 @@ namespace Assets.Scripts
 
         // This method is to find the first pixel of that colour in the shape.
         public Stack<Vector2> FFStack(Stack<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, FloodFillAlgorithm algorithm)
-        { 
+        {
             textureMip = texture.GetPixels32();
             currentMipPosition = 0;
+            rounds = 0;
+
 
             Stopwatch stopWatch = new Stopwatch();
             List<long> times = new List<long>();
 
-            stopWatch.Start();
 
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
 
             if (algorithm == FloodFillAlgorithm.PERIMETER_FILL)
             {
-                PerimeterFill pF = new PerimeterFill();
-                pF.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
+                PerimeterFill nB = new PerimeterFill();
+                for (int i = 0; i < 1000; i++)
+                {
+                    stopWatch.Start();
+                    nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
+                    stopWatch.Stop();
+                }
+                times.Add(stopWatch.ElapsedMilliseconds);
             }
             else
             {
@@ -48,28 +55,105 @@ namespace Assets.Scripts
                     // Start flood fill if colours are the same.
                     if (textureMip[currentMipPosition].Equals(colour))
                     {
-                        
                         if (algorithm == FloodFillAlgorithm.FOUR_WAY_RECURSION)
                         {
                             FourWay fW = new FourWay();
-                            fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            print(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
                         }
-                        
+
                         else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
                         {
                             FourWay fW = new FourWay();
-                            fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
                         }
-                  
                         else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
                         {
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
                             SpanFill sF = new SpanFill();
-                            sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                        } 
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
+                        }
                         else if (algorithm == FloodFillAlgorithm.WALK_BASED_FILL)
                         {
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
                             WalkBasedFill wF = new WalkBasedFill();
-                            //wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            times.Add(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
                         }
                     }
 
@@ -82,15 +166,16 @@ namespace Assets.Scripts
                 }
                 textureMip = null;
             }
-            stopWatch.Stop();
-            times.Add(stopWatch.ElapsedMilliseconds);
-            stopWatch.Reset();
+
+            print("Shape rounds: " + rounds);
+            print("Shape recursions: " + times.Count);
+            print("Shape Points (Pixels): " + shape.Count());
 
             PrintTime(times);
             return shape;
         }
 
-        public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, FloodFillAlgorithm algorithm)
+            public Queue<Vector2> FFQueue(Queue<Vector2> shape, Texture2D texture, int textureHeight, int textureWidth, Color32 colour, FloodFillAlgorithm algorithm)
         {
             textureMip = texture.GetPixels32();
             currentMipPosition = 0;
@@ -132,18 +217,37 @@ namespace Assets.Scripts
                         {
                             FourWay fW = new FourWay();
 
-                            fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                        }
-
-                        else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
-                        {
-                            FourWay fW = new FourWay();
                             bool[] pixelTemp = new bool[textureHeight * textureWidth];
                             for (int i = 0; i < pixelTemp.Length; ++i)
                             {
                                 pixelTemp[i] = pixelCheck[i];
                             }
                             int tempMipPos = currentMipPosition;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                for (int j = 0; j < pixelTemp.Length; ++j)
+                                {
+                                    pixelCheck[j] = pixelTemp[j];
+                                }
+                                currentMipPosition = tempMipPos;
+                                stopWatch.Start();
+                                fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
+                                stopWatch.Stop();
+                                shape.Clear();
+                            }
+                            print(stopWatch.ElapsedMilliseconds);
+                            stopWatch.Reset();
+                        }
+
+                        else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
+                        {
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            for (int i = 0; i < pixelTemp.Length; ++i)
+                            {
+                                pixelTemp[i] = pixelCheck[i];
+                            }
+                            int tempMipPos = currentMipPosition;
+                            FourWay fW = new FourWay();
                             for (int i = 0; i < 1000; i++)
                             {
                                 for (int j = 0; j < pixelTemp.Length; ++j)
@@ -161,7 +265,7 @@ namespace Assets.Scripts
                         }
                         else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
                         {
-                             bool[] pixelTemp = new bool[textureHeight * textureWidth];
+                            bool[] pixelTemp = new bool[textureHeight * textureWidth];
                             
                             for (int i = 0; i < pixelTemp.Length; ++i)
                             {
