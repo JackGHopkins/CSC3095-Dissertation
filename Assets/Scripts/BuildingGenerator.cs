@@ -22,11 +22,12 @@ namespace Assets.Scripts
 
     public enum FloodFillAlgorithm
     {
-        FOUR_WAY_RECURSION = 0,
-        FOUR_WAY_LINEAR = 1,
-        SPAN_FILL = 2,
-        WALK_BASED_FILL = 3,
-        PERIMETER_FILL = 4,
+        BRUTE_FORCE = 0,
+        FOUR_WAY_RECURSION = 1,
+        FOUR_WAY_LINEAR = 2,
+        SPAN_FILL = 3,
+        WALK_BASED_FILL = 4,
+        PERIMETER_FILL = 5,
     }
 
     public enum DataStructure
@@ -47,6 +48,8 @@ namespace Assets.Scripts
         [SerializeField] Building[] meshArray;
         [SerializeField] Color32[] colours;
 
+        Stopwatch stopWatch = new Stopwatch();
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -63,30 +66,31 @@ namespace Assets.Scripts
                 if (dataStruct == DataStructure.STACK)
                 {
                     Stack<Vector2> shape = new Stack<Vector2>();
-                    shape = ff.FFStack(shape, texture, texture.height, texture.width, colours[i], algorithm);
+                    shape = ff.FFStack(shape, texture, texture.height, texture.width, colours[i], algorithm, stopWatch);
                     //sortShape(shape);
 
-                    for (int j = 0; j < shape.Count;)
-                    {
-                        //SpawnBuilding(meshesArray[i].meshes, shape.ToArray()[j]);
+                    //for (int j = 0; j < shape.Count;)
+                    //{
+                    //    SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
-                        j = j + meshArray[i].buildingSpacing;
-                    }
+                    //    j = j + meshArray[i].buildingSpacing;
+                    //}
                 }
                 else if (dataStruct == DataStructure.QUEUE)
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
-                    shape = ff.FFQueue(shape, texture, texture.height, texture.width, colours[i], algorithm);
-                    //sortShape(shape);
+                    shape = ff.FFQueue(shape, texture, texture.height, texture.width, colours[i], algorithm, stopWatch);
+                    sortShape(shape);
 
                     for (int j = 0; j < shape.Count;)
                     {
-                        //SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
+                        SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
                         j = j + meshArray[i].buildingSpacing;
                     }
                 }
             }
+            print(stopWatch.ElapsedMilliseconds);
         }
 
         void SpawnBuilding(GameObject[] buildingArray, Vector2 position)

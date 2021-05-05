@@ -45,7 +45,6 @@ namespace Assets.Scripts
                 // 7. Return
                 return;
             }
-            pixelCheck[currentMipPosition] = true;
         }
 
         /*
@@ -87,7 +86,6 @@ namespace Assets.Scripts
                 // 7. Return
                 return;
             }
-            pixelCheck[currentMipPosition] = true;
         }
 
         /*

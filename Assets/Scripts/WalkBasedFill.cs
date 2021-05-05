@@ -80,7 +80,7 @@ namespace Assets.Scripts
             CaseFinder();
 
 
-            if (count != 4)
+            if (count != 4 && count != 0)
             {
                 do
                 {
@@ -94,6 +94,10 @@ namespace Assets.Scripts
 
             switch (count)
             {
+                case 0:
+                    paint = true;
+                    MoveForward(shape, ref pixelCheck);
+                    break;
                 case 1:
                     if (backtrack)
                     {
@@ -132,7 +136,6 @@ namespace Assets.Scripts
                         }
                         while ((CheckFrontPixel() && count == 2));
                     }
-
                     break;
                 case 2:
                     if (!CheckBackPixel())
@@ -317,7 +320,7 @@ namespace Assets.Scripts
             CaseFinder();
 
 
-            if (count != 4)
+            if (count != 4 && count != 0)
             {
                 do
                 {
@@ -331,6 +334,10 @@ namespace Assets.Scripts
 
             switch (count)
             {
+                case 0:
+                    paint = true;
+                    MoveForward(shape, ref pixelCheck);
+                    break;
                 case 1:
                     if (backtrack)
                     {
@@ -369,7 +376,6 @@ namespace Assets.Scripts
                         }
                         while ((CheckFrontPixel() && count == 2));
                     }
-
                     break;
                 case 2:
                     if (!CheckBackPixel())

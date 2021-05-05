@@ -325,8 +325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multipledImgSize: 1
-  algorithm: 3
-  dataStruct: 0
+  algorithm: 0
+  dataStruct: 1
   texture: {fileID: 2800000, guid: 07c4fc95c6244194ca6b187fd189d2e2, type: 3}
   meshArray:
   - name: 
