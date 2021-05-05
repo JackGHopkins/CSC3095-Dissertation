@@ -324,26 +324,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ab2782eaa51214ab220854a13bb918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minPieces: 1
-  maxPieces: 1000
-  textureGridStepSizeX: 4
-  textureGridStepSizeY: 4
-  imgWidth: 1000
-  imgHeight: 1000
   multipledImgSize: 1
-  stack: 0
-  fourWay: 0
-  recursion: 0
-  spanFill: 0
-  walkFill: 1
-  neighbourChecking: 0
+  algorithm: 0
+  dataStruct: 1
   texture: {fileID: 2800000, guid: 340de9a03cd7ff54cb25598c6adbd4d5, type: 3}
-  meshesArray:
-  - name: Black / Walls
-    buildingSpacing: 1
-    perimeter: 0
-    meshes:
-    - {fileID: 169604, guid: 507f5dc602b42c549a32a51aa9236bb1, type: 3}
+  meshArray: []
   colours:
   - serializedVersion: 2
     rgba: 4278190080

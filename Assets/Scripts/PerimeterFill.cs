@@ -7,14 +7,10 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class NeighbourChecking
+    class PerimeterFill
     {
         bool[] pixelCheck;
         Color32[] textureMip;
-
-        Texture2D texture;
-        int textureWidth;
-        int textureHeight;
         int currentMipPosition;
 
         // I think, if you go through each pixel that isn't black, and check its neighbouring pixels to see whether they are black. 
@@ -24,11 +20,8 @@ namespace Assets.Scripts
         /*
          *  STACK BASED
          */
-        public Stack<Vector2> FFNeighbourChecking(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip)
+        public void PerimeterFind(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, bool[] pixelCheck)
         {
-            // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
-            pixelCheck = new bool[textureWidth * textureHeight];
-
             for (currentMipPosition = 0; currentMipPosition < textureMip.Length; currentMipPosition++)
             {
                 if ((!colour.Equals(textureMip[currentMipPosition])))
@@ -80,13 +73,13 @@ namespace Assets.Scripts
                     pixelCheck[currentMipPosition] = true;
                 }
             }
-            return shape;
+            return;
         }
 
         /*
          *  QUEUE BASED
          */
-        public Queue<Vector2> FFNeighbourChecking(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip)
+        public void PerimeterFind(Queue<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, bool[] pixelCheck)
         {
             // Array to corrospond to whether or not that pixel in the Mip has been checked or not.
             pixelCheck = new bool[textureWidth * textureHeight];
@@ -142,7 +135,7 @@ namespace Assets.Scripts
                     pixelCheck[currentMipPosition] = true;
                 }
             }
-            return shape;
+            return;
         }
     }
 }
