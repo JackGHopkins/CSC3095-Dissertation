@@ -54,7 +54,15 @@ namespace Assets.Scripts
         void Awake()
         {
             transform.localScale += new Vector3(texture.width, -0.5f, texture.height);
-            Main();
+
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown("space"))
+            {
+                Main();
+            }
         }
 
         void Main()
@@ -80,14 +88,14 @@ namespace Assets.Scripts
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
                     shape = ff.FFQueue(shape, texture, texture.height, texture.width, colours[i], algorithm, stopWatch);
-                    sortShape(shape);
+                    //sortShape(shape);
 
-                    for (int j = 0; j < shape.Count;)
-                    {
-                        SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
+                    //for (int j = 0; j < shape.Count;)
+                    //{
+                    //    SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
-                        j = j + meshArray[i].buildingSpacing;
-                    }
+                    //    j = j + meshArray[i].buildingSpacing;
+                    //}
                 }
             }
             print(stopWatch.ElapsedMilliseconds);

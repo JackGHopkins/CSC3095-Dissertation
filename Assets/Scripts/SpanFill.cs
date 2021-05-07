@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace Assets.Scripts
 {
-    class SpanFill
+    class SpanFill 
     {
         public void ScanLine(Stack<Vector2> shape, int textureHeight, int textureWidth, Color32 colour, Color32[] textureMip, int currentMipPosition, bool[] pixelCheck)
         {
@@ -114,6 +115,7 @@ namespace Assets.Scripts
                     x1++;
                 }
             }
+            Debug.Log(shape.Count + ": " + Profiler.GetTotalAllocatedMemoryLong());
             return;
         }
     }
