@@ -75,27 +75,27 @@ namespace Assets.Scripts
                 {
                     Stack<Vector2> shape = new Stack<Vector2>();
                     shape = ff.FFStack(shape, texture, texture.height, texture.width, colours[i], algorithm, stopWatch);
-                    //sortShape(shape);
+                    sortShape(shape);
 
-                    //for (int j = 0; j < shape.Count;)
-                    //{
-                    //    SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
+                    for (int j = 0; j < shape.Count;)
+                    {
+                        SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
-                    //    j = j + meshArray[i].buildingSpacing;
-                    //}
+                        j = j + meshArray[i].buildingSpacing;
+                    }
                 }
                 else if (dataStruct == DataStructure.QUEUE)
                 {
                     Queue<Vector2> shape = new Queue<Vector2>();
                     shape = ff.FFQueue(shape, texture, texture.height, texture.width, colours[i], algorithm, stopWatch);
-                    //sortShape(shape);
+                    sortShape(shape);
 
-                    //for (int j = 0; j < shape.Count;)
-                    //{
-                    //    SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
+                    for (int j = 0; j < shape.Count;)
+                    {
+                        SpawnBuilding(meshArray[i].meshes, shape.ToArray()[j]);
 
-                    //    j = j + meshArray[i].buildingSpacing;
-                    //}
+                        j = j + meshArray[i].buildingSpacing;
+                    }
                 }
             }
             print(stopWatch.ElapsedMilliseconds);

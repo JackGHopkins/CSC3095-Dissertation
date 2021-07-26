@@ -30,37 +30,12 @@ namespace Assets.Scripts
             if (algorithm == FloodFillAlgorithm.BRUTE_FORCE)
             {
                 BruteForce bF = new BruteForce();
-                //for (int i = 0; i < 1000; i++)
-                //{
-                //    stopWatch.Start();
-                Profiler.BeginSample("My Sample");
-                UnityEngine.Debug.Log("This code is being profiled");
                 bF.UpdateShape(shape, textureHeight, textureWidth, colour, textureMip);
-                Profiler.EndSample();
-                //    stopWatch.Stop();
-                //}
-
             }
             else if (algorithm == FloodFillAlgorithm.PERIMETER_FILL)
             {
                 PerimeterFill nB = new PerimeterFill();
-                //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                //for (int i = 0; i < pixelTemp.Length; ++i)
-                //{
-                //    pixelTemp[i] = pixelCheck[i];
-                //}
-                //int tempMipPos = currentMipPosition;
-                //for (int i = 0; i < 1000; i++)
-                //{
-                //    for (int j = 0; j < pixelTemp.Length; ++j)
-                //    {
-                //        pixelCheck[j] = pixelTemp[j];
-                //    }
-                //    currentMipPosition = tempMipPos;
-                //    stopWatch.Start();
-                    nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
-                //    stopWatch.Stop();
-                //}
+                nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
             }
             else
             {
@@ -79,108 +54,30 @@ namespace Assets.Scripts
                         if (algorithm == FloodFillAlgorithm.FOUR_WAY_RECURSION)
                         {
                             FourWay fW = new FourWay();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
                             fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            //    stopWatch.Stop();
-                            //}
                         }
 
                         else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
                         {
                             FourWay fW = new FourWay();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
                             fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            //    stopWatch.Stop();
-                            //}
                         }
                         else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
                         {
                             SpanFill sF = new SpanFill();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
                             sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            //    stopWatch.Stop();
-                            //}
                         }
                         else if (algorithm == FloodFillAlgorithm.WALK_BASED_FILL)
                         {
                             WalkBasedFill wF = new WalkBasedFill();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
                             wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            //    stopWatch.Stop();
-                            //}
                         }
                     }
-
                     // Pixel has now been checked.
                     if (!pixelCheck[pixelCount])
                         pixelCheck[pixelCount] = true;
 
                     currentMipPosition++;
-
                 }
                 textureMip = null;
             }
@@ -202,38 +99,12 @@ namespace Assets.Scripts
             if (algorithm == FloodFillAlgorithm.BRUTE_FORCE)
             {
                 BruteForce bF = new BruteForce();
-                //for (int i = 0; i < 1000; i++)
-                //{
-
-                Profiler.BeginSample("My Sample");
-                UnityEngine.Debug.Log("This code is being profiled");
-                    bF.UpdateShape(shape, textureHeight, textureWidth, colour, textureMip);
- 
-
-                Profiler.EndSample();
-                //}
-
+                bF.UpdateShape(shape, textureHeight, textureWidth, colour, textureMip);
             }
             else if (algorithm == FloodFillAlgorithm.PERIMETER_FILL)
             {
                 PerimeterFill nB = new PerimeterFill();
-                //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                //for (int i = 0; i < pixelTemp.Length; ++i)
-                //{
-                //    pixelTemp[i] = pixelCheck[i];
-                //}
-                //int tempMipPos = currentMipPosition;
-                //for (int i = 0; i < 1000; i++)
-                //{
-                //    for (int j = 0; j < pixelTemp.Length; ++j)
-                //    {
-                //        pixelCheck[j] = pixelTemp[j];
-                //    }
-                //    currentMipPosition = tempMipPos;
-                //    stopWatch.Start();
-                    nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
-                //    stopWatch.Stop();
-                //}
+                nB.PerimeterFind(shape, textureHeight, textureWidth, colour, textureMip, pixelCheck);
             }
             else
             {
@@ -251,114 +122,34 @@ namespace Assets.Scripts
                     {
                         if (algorithm == FloodFillAlgorithm.FOUR_WAY_RECURSION)
                         {
-
                             FourWay fW = new FourWay();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                                stopWatch.Start();
-                                fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            //    stopWatch.Stop();
-                            //}
+                            fW.FourWayRecursion(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         }
 
                         else if (algorithm == FloodFillAlgorithm.FOUR_WAY_LINEAR)
                         {
                             FourWay fW = new FourWay();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                                Profiler.BeginSample("My Sample");
-                                UnityEngine.Debug.Log("This code is being profiled");
-                                fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-  
-                                Profiler.EndSample();
-                            //}
+                            fW.FourWayLinear(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
                         }
                         else if (algorithm == FloodFillAlgorithm.SPAN_FILL)
                         {
                             SpanFill sF = new SpanFill();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
-                            print(Profiler.GetTotalAllocatedMemoryLong());
                             sF.ScanLine(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            print(Profiler.GetTotalAllocatedMemoryLong());
-                            //    stopWatch.Stop();
-                            //}
                         }
                         else if (algorithm == FloodFillAlgorithm.WALK_BASED_FILL)
                         {
                             WalkBasedFill wF = new WalkBasedFill();
-                            //bool[] pixelTemp = new bool[textureHeight * textureWidth];
-                            //for (int i = 0; i < pixelTemp.Length; ++i)
-                            //{
-                            //    pixelTemp[i] = pixelCheck[i];
-                            //}
-                            //int tempMipPos = currentMipPosition;
-                            //for (int i = 0; i < 1000; i++)
-                            //{
-                            //    for (int j = 0; j < pixelTemp.Length; ++j)
-                            //    {
-                            //        pixelCheck[j] = pixelTemp[j];
-                            //    }
-                            //    currentMipPosition = tempMipPos;
-                            //    stopWatch.Start();
-                            Profiler.BeginSample("My Sample");
-                            UnityEngine.Debug.Log("This code is being profiled");
                             wF.Painter(shape, textureHeight, textureWidth, colour, textureMip, currentMipPosition, pixelCheck);
-                            Profiler.EndSample();
-                            print(Profiler.GetTotalAllocatedMemoryLong());
-                            //stopWatch.Stop();
-                            // }
                         }
                     }
-
                     // Pixel has now been checked.
                     if (!pixelCheck[pixelCount])
                         pixelCheck[pixelCount] = true;
 
                     currentMipPosition++;
-
                 }
                 textureMip = null;
             }
-
             //PrintTime(times);
             return shape;
         }
