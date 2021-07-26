@@ -37,4 +37,4 @@ Not applicable. I did not use any source code.
 ## If you are using a library or function created by someone else, please put those parts in a separate file and write the corresponding filename.
 Also, not applicable.
 =======
-You can watch a video presentation of it [here](youtube.com/watch?v=HVNwGBe0hbw&t=2s&ab_channel=JackHopkins).
+You can watch a video presentation of it here: https://www.youtube.com/watch?v=HVNwGBe0hbw&
