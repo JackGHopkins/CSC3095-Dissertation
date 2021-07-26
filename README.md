@@ -1,5 +1,6 @@
 # CSC3095-Dissertation
 
+<<<<<<< HEAD
 CSC3095 Dissertation : April 2021 - May 2021
 
 What was the development environment used for your program?
@@ -36,3 +37,6 @@ Not applicable. I did not use any source code.
 
 ## If you are using a library or function created by someone else, please put those parts in a separate file and write the corresponding filename.
 Also, not applicable.
+=======
+You can watch a video presentation of it [here](youtube.com/watch?v=HVNwGBe0hbw&t=2s&ab_channel=JackHopkins).
+>>>>>>> 0eb9dbc87712bca7b74c471929829c17f5b1ee1f
