@@ -1,15 +1,14 @@
 # CSC3095-Dissertation
 
-CSC3095 Dissertation : April 2021 - May 2021
+## CSC3095 Dissertation : April 2021 - May 2021
 
-What was the development environment used for your program?
-I programed this at home during lockdown in the Pandemic. It is my Bachelor degree's dissertation Project.
+## GitHub Repository: https://github.com/JackGHopkins/CSC3095-Dissertation
 
 Used OS: Windows 10
 
 Used Library/Middleware: N/A
 
-Used Engine: Unity 2020.1.8f
+Used Engine: N/A
 
 Used Development Environment: Visual Studio Community 2019 | Version 16.3.7
 
