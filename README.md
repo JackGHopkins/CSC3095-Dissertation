@@ -1,6 +1,5 @@
 # CSC3095-Dissertation
 
-<<<<<<< HEAD
 CSC3095 Dissertation : April 2021 - May 2021
 
 What was the development environment used for your program?
